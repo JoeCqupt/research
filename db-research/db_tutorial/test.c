@@ -34,5 +34,9 @@ int main()
 
     Block *b = build_block();
     printf("data of Block:%s \n", b->data);
+
+
+    printf("a/b : %d \n", 2/3);
+    printf("a%b : %d \n", 2%3);
 }
 
