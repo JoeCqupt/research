@@ -170,15 +170,15 @@ PrepareResult prepare_statement(InputBuffer *input_buffer, Statement *statement)
 void serialize_row(Row *row, void *destination)
 {
     memcpy(destination + ID_OFFSET, &(row->id), ID_SIZE);
-    memcpy(destination + USERNAME_OFFSET, &row->username, USERNAME_SIZE);
-    memcpy(destination + EMAIL_OFFSET, &row->email, EMAIL_SIZE);
+    memcpy(destination + USERNAME_OFFSET, row->username, USERNAME_SIZE);
+    memcpy(destination + EMAIL_OFFSET, row->email, EMAIL_SIZE);
 }
 
 void deserialize_row(void *source, Row *row)
 {
     memcpy(&(row->id), source + ID_OFFSET, ID_SIZE);
-    memcpy(&row->username, source + USERNAME_OFFSET, USERNAME_SIZE);
-    memcpy(&row->email, source + EMAIL_OFFSET, EMAIL_SIZE);
+    memcpy(row->username, source + USERNAME_OFFSET, USERNAME_SIZE);
+    memcpy(row->email, source + EMAIL_OFFSET, EMAIL_SIZE);
 }
 
 void *row_slot(Table *table, uint32_t row_num)
@@ -241,7 +241,6 @@ int main()
     {
         print_prompt();
         read_input(input_buffer);
-        // input_buffer->buffer = "insert 1 joe joe@";
 
         if (input_buffer->buffer[0] == '.')
         {
