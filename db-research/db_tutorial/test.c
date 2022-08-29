@@ -45,12 +45,13 @@ void test2()
     printf("a / b : %d \n", 2 / 3);
     printf("a %% b : %d \n", 2 % 3);
 }
+
 int main()
 {
 
-    test1();
+    // test1();
 
-    test2();
+    // test2();
 }
 /**
  * @brief

@@ -53,3 +53,4 @@ dkms.conf
 .vscode/
 db-research/db_tutorial/simpledb
 db-research/db_tutorial/data*
+target/
