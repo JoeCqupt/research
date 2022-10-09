@@ -5,5 +5,6 @@
 #include <repl.h>
 #include <parser.h>
 #include <executor.h>
+#include <storage.h>
 
 #endif

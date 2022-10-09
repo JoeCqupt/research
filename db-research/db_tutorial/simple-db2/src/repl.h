@@ -1,8 +1,7 @@
 #ifndef _SIMPLE_REPL_HEADER_
 #define _SIMPLE_REPL_HEADER_
 
-#include <config.h>
-#include<core.h>
+#include <core.h>
 
 typedef struct
 {
@@ -15,7 +14,7 @@ void print_prompt();
 
 InputBuffer *new_input_buffer();
 
-void read_input(InputBuffer* input_buffer);
+void read_input(InputBuffer *input_buffer);
 
 void close_input_buffer(InputBuffer *input_buffer);
 
