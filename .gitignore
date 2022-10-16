@@ -55,3 +55,4 @@ db-research/db_tutorial/simpledb
 db-research/db_tutorial/data*
 target/
 .idea/
+a.out
