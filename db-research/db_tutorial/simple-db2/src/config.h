@@ -7,4 +7,4 @@
 #include <stdbool.h>
 #include <string.h>
 
-#endif  /* _SIMPLE_CONFIG_HEADER_ */
+#endif /* _SIMPLE_CONFIG_HEADER_ */

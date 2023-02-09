@@ -1,7 +1,7 @@
 #ifndef _SIMPLE_REPL_HEADER_
 #define _SIMPLE_REPL_HEADER_
 
-#include <core.h>
+#include "core.h"
 
 typedef struct
 {
