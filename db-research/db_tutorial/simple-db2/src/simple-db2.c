@@ -2,6 +2,7 @@
 
 int main(int argc, char *argv[])
 {
+    Table *table = open_table();
     InputBuffer *input_buffer = new_input_buffer();
     while (true)
     {
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
             continue;
         }
 
-        execute_statement(&statement);
+        execute_statement(&statement, table);
         printf("Executed.\n");
     }
 

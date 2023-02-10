@@ -1,6 +1,8 @@
 #ifndef _SIMPLE_PARSER_HEADER_
 #define _SIMPLE_PARSER_HEADER_
 
+#include "core.h"
+
 typedef enum
 {
     META_COMMAND_SUCCESS,
@@ -19,15 +21,6 @@ typedef enum
     STATEMENT_INSERT,
     STATEMENT_SELECT
 } StatementType;
-
-#define COLUMN_USERNAME_SIZE 32
-#define COLUMN_EMAIL_SIZE 255
-typedef struct
-{
-    u_int32_t id;
-    char username[COLUMN_USERNAME_SIZE];
-    char email[COLUMN_EMAIL_SIZE];
-} Row;
 
 typedef struct
 {
