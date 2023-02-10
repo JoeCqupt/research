@@ -1,6 +1,7 @@
 package org.example;
 
-import org.example.person.Person;
+
+import org.example.model.Person;
 
 import java.io.ByteArrayOutputStream;
 
@@ -9,8 +10,7 @@ import java.io.ByteArrayOutputStream;
  */
 public class App
 {
-    public static void main( String[] args ) throws Exception
-    {
+    public static void main( String[] args ) throws Exception {
 
         // serialize
         Person joe = Person.newBuilder()

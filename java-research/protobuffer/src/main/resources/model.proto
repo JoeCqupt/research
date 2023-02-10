@@ -1,8 +1,12 @@
 syntax = "proto2";
 
-option java_package = "org.example.person";
+package org.example.model;
+
+option java_package = "org.example.model";
 
 option java_multiple_files = true;
+
+option java_outer_classname = "ModelProto";
 
 
 message Person{
