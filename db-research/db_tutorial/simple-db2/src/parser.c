@@ -1,10 +1,13 @@
 #include <core.h>
 
+extern bool RUNNING;
+
 MetaCommandResult do_meta_command(char *buffer)
 {
     if (strcmp(buffer, ".exit") == 0)
     {
-        exit(EXIT_SUCCESS);
+        RUNNING = false;
+        return META_COMMAND_SUCCESS;
     }
     else
     {
