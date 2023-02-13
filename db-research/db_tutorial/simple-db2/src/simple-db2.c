@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         printf("Executed.\n");
     }
 
-    free(input_buffer);
+    close_input_buffer(input_buffer);
     close_table(table);
 
     return EXIT_SUCCESS;
