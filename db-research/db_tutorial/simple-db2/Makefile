@@ -21,7 +21,7 @@ objs/storage.o: $(CORE_DEPS) src/storage.c
 
 .PHONY: clean
 clean: 
-	rm -rf simple-db2 objs/*.o test.out
+	rm -rf simple-db2 objs/*.o test.out *.db
 
 
 test:  objs/repl.o objs/parser.o objs/executor.o objs/storage.o $(CORE_DEPS) test/test.c

@@ -24,18 +24,30 @@ typedef struct
 #define PAGE_SIZE 4096
 #define PRE_PAGE_ROW_NUM (PAGE_SIZE / ROW_SZIE)
 #define PAGE_NUM 100
-#define MAX_ROW_NUM (PRE_PAGE_ROW_NUM * PRE_PAGE_ROW_NUM)
+#define MAX_ROW_NUM (PRE_PAGE_ROW_NUM * PAGE_NUM)
 
 typedef struct
 {
-    uint32_t row_num;
     void *pages[PAGE_NUM];
+} Pager;
+
+typedef struct
+{
+    uint32_t max_page_idx;
+    Pager *pager;
 } Table;
 
-Table *open_table();
-void close_table(Table *table);
+typedef struct
+{
+    Table *table;
+    FILE *file;
+    long file_size;
+} Database;
 
-void *solt_of_row(Table *table, int32_t row_idx);
+Database *open_db(char *file_name);
+void close_db(Database *db);
+
+void *solt_of_row(Database *db, int32_t row_idx);
 
 void serialize_row(Row *source, void *destination);
 void deserialize_row(void *source, Row *destination);

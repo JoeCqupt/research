@@ -1,9 +1,10 @@
 #include <core.h>
 bool RUNNING = true;
+char *DEFAULT_FILE_NAME = "data.db";
 
 int main(int argc, char *argv[])
 {
-    Table *table = open_table();
+    Database *db = open_db(DEFAULT_FILE_NAME);
     InputBuffer *input_buffer = new_input_buffer();
     while (RUNNING)
     {
@@ -25,13 +26,12 @@ int main(int argc, char *argv[])
         }
         else
         {
-
             Statement statement;
             PrepareResult result = prepare_statement(input_buffer->buffer, &statement);
             switch (result)
             {
             case PREPARE_SUCCESS:
-                execute_statement(&statement, table);
+                execute_statement(&statement, db);
                 break;
 
             case PREPARE_SYNTAX_ERROR:
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     }
 
     close_input_buffer(input_buffer);
-    close_table(table);
+    close_db(db);
 
     return EXIT_SUCCESS;
 }

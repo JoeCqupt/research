@@ -1,32 +1,110 @@
 #include <core.h>
 
-Table *open_table()
+extern int row_cur_idx;
+
+Pager *open_pager()
 {
-    Table *table = malloc(sizeof(Table));
-    table->row_num = 0;
+    Pager *pager = malloc(sizeof(Pager));
     for (int i = 0; i < PAGE_NUM; i++)
     {
-        table->pages[i] = NULL;
+        pager->pages[i] = NULL;
     }
+    return pager;
+}
+
+Table *open_table(Database *db)
+{
+    fseek(db->file, 0, SEEK_END);
+    long file_size = ftell(db->file);
+    if (file_size < 0)
+    {
+        printf("fail get file size\n");
+        exit(EXIT_FAILURE);
+    }
+    db->file_size = file_size;
+    u_int32_t row_num = ((file_size / PAGE_SIZE) * PRE_PAGE_ROW_NUM) + ((file_size % PAGE_SIZE) / ROW_SZIE);
+    row_cur_idx = row_num;
+
+    u_int32_t page_num = (file_size / PAGE_SIZE);
+    if (file_size % PAGE_SIZE > 0)
+    {
+        page_num++;
+    }
+
+    Table *table = malloc(sizeof(Table));
+    table->max_page_idx = page_num - 1;
+    table->pager = open_pager();
     return table;
 }
-void close_table(Table *table)
+
+Database *open_db(char *file_name)
+{
+    FILE *file = fopen(file_name, "a+");
+    if (file == NULL)
+    {
+        printf("fail open file %s \n", file_name);
+        exit(EXIT_FAILURE);
+    }
+    Database *db = malloc(sizeof(Database));
+    db->file = file;
+    db->table = open_table(db);
+    return db;
+}
+
+void close_pager(Pager *pager, FILE *file)
 {
     for (int i = 0; i < PAGE_NUM; i++)
     {
-        free(table->pages[i]);
+        void *page = pager->pages[i];
+        if (page != NULL)
+        {
+            // FIXME 
+            fwrite(page, PAGE_SIZE, 1, file);
+            fflush(file);
+            free(page);
+        }
     }
+}
+
+void close_table(Table *table, FILE *file)
+{
+    close_pager(table->pager, file);
+    free(table->pager);
     free(table);
 }
 
-void *solt_of_row(Table *table, int32_t row_idx)
+void close_db(Database *db)
 {
+    close_table(db->table, db->file);
+    fclose(db->file);
+    free(db);
+}
+
+void *solt_of_row(Database *db, int32_t row_idx)
+{
+    Table *table = db->table;
+    Pager *pager = table->pager;
+
     int32_t page_idx = row_idx / PRE_PAGE_ROW_NUM;
-    void *page = table->pages[page_idx];
+
+    void *page = pager->pages[page_idx];
     if (page == NULL)
     {
         page = malloc(PAGE_SIZE);
-        table->pages[page_idx] = page;
+        if (page_idx <= table->max_page_idx)
+        {
+            u_int32_t offset = page_idx * PAGE_SIZE;
+            fseek(db->file, offset, SEEK_SET);
+            if (page_idx < table->max_page_idx)
+            {
+                fread(page, PAGE_SIZE, 1, db->file);
+            }
+            else
+            {
+                fread(page, (db->file_size - offset), 1, db->file);
+            }
+        }
+        pager->pages[page_idx] = page;
     }
 
     int32_t row_offset = row_idx % PRE_PAGE_ROW_NUM;
