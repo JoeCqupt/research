@@ -22,6 +22,7 @@ Table *open_table(Database *db)
         exit(EXIT_FAILURE);
     }
     db->file_size = file_size;
+
     u_int32_t row_num = ((file_size / PAGE_SIZE) * PRE_PAGE_ROW_NUM) + ((file_size % PAGE_SIZE) / ROW_SZIE);
     row_cur_idx = row_num;
 
@@ -32,7 +33,7 @@ Table *open_table(Database *db)
     }
 
     Table *table = malloc(sizeof(Table));
-    table->max_page_idx = page_num - 1;
+    table->max_page_idx = page_num > 0 ? page_num - 1 : page_num;
     table->pager = open_pager();
     return table;
 }
@@ -51,31 +52,34 @@ Database *open_db(char *file_name)
     return db;
 }
 
-void close_pager(Pager *pager, FILE *file)
+void close_pager(Table *table, Database *db)
 {
-    for (int i = 0; i < PAGE_NUM; i++)
+    Pager *pager = table->pager;
+    FILE *file = db->file;
+
+    for (int i = table->max_page_idx; i < PAGE_NUM; i++)
     {
         void *page = pager->pages[i];
         if (page != NULL)
         {
-            // FIXME 
+            fseek(file, i * PAGE_SIZE, SEEK_SET);
             fwrite(page, PAGE_SIZE, 1, file);
-            fflush(file);
             free(page);
         }
     }
 }
 
-void close_table(Table *table, FILE *file)
+void close_table(Database *db)
 {
-    close_pager(table->pager, file);
+    Table *table = db->table;
+    close_pager(table, db);
     free(table->pager);
     free(table);
 }
 
 void close_db(Database *db)
 {
-    close_table(db->table, db->file);
+    close_table(db);
     fclose(db->file);
     free(db);
 }
