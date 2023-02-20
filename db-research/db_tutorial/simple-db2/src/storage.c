@@ -40,11 +40,10 @@ Table *open_table(Database *db)
 
 Database *open_db(char *file_name)
 {
-    FILE *file = fopen(file_name, "a+");
+    FILE *file = fopen(file_name, "r+");
     if (file == NULL)
     {
-        printf("fail open file %s \n", file_name);
-        exit(EXIT_FAILURE);
+        file = fopen(file_name, "w+");
     }
     Database *db = malloc(sizeof(Database));
     db->file = file;
@@ -57,13 +56,34 @@ void close_pager(Table *table, Database *db)
     Pager *pager = table->pager;
     FILE *file = db->file;
 
-    for (int i = table->max_page_idx; i < PAGE_NUM; i++)
+    u_int32_t cur_max_page_idx = (row_cur_idx / PRE_PAGE_ROW_NUM);
+    u_int32_t row_num_of_last_page = row_cur_idx % PRE_PAGE_ROW_NUM;
+    u_int32_t page_size_of_last_page = 0;
+    if (row_num_of_last_page > 0)
+    {
+        cur_max_page_idx++;
+        page_size_of_last_page = row_num_of_last_page * ROW_SZIE;
+    }
+    else
+    {
+        page_size_of_last_page = PAGE_SIZE;
+    }
+
+    for (int i = table->max_page_idx; i < cur_max_page_idx; i++)
     {
         void *page = pager->pages[i];
         if (page != NULL)
         {
             fseek(file, i * PAGE_SIZE, SEEK_SET);
-            fwrite(page, PAGE_SIZE, 1, file);
+            if (i == cur_max_page_idx - 1)
+            {
+                fwrite(page, page_size_of_last_page, 1, file);
+            }
+            else
+            {
+                fwrite(page, PAGE_SIZE, 1, file);
+            }
+
             free(page);
         }
     }
