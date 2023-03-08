@@ -1,4 +1,4 @@
-package org.example;
+package org.example.rx;
 
 import org.reactivestreams.Subscription;
 import reactor.core.publisher.BaseSubscriber;
