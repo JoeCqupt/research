@@ -1,4 +1,4 @@
-package org.example.asm.core;
+package org.example.asm.core.clazz;
 
 import org.objectweb.asm.ClassWriter;
 

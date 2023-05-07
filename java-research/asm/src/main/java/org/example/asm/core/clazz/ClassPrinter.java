@@ -1,4 +1,4 @@
-package org.example.asm.core;
+package org.example.asm.core.clazz;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
